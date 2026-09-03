@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+
+<html dir="ltr" lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport"/>
+<meta content="Gérez vos courses, votre budget et votre stock alimentaire facilement en famille." name="description"/>
+<meta content="#4a7c59" name="theme-color"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="default" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="Budget Courses" name="apple-mobile-web-app-title"/>
+<link href="manifest.json" rel="manifest"/>
+<title>Mon Budget Courses 🛒</title>
+<link href="style.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="app-container" role="main">
+<!-- ══════════════════════════════════════════
+       PAGE 1 — ACCUEIL / TABLEAU DE BORD
+       ══════════════════════════════════════════ -->
+<div aria-label="Tableau de bord" class="page active" id="page-home" role="region">
+<header class="page-header">
+<span style="font-size:1.4rem">🛒</span>
+<h1>Mon Budget Courses</h1>
+<button aria-label="Ouvrir l'assistant" class="back-btn" onclick="App.navigate('assistant')">🤖</button>
+</header>
+<div id="home-content">
+<div class="empty-state" style="padding-top:80px">
+<div class="empty-icon">⏳</div>
+<h3>Chargement…</h3>
+</div>
+</div>
+</div>
+<!-- ══════════════════════════════════════════
+       PAGE 2 — LISTE DE COURSES
+       ══════════════════════════════════════════ -->
+<div aria-label="Liste de courses" class="page" id="page-list" role="region">
+<header class="page-header">
+<h1>📝 Ma liste de courses</h1>
+<button aria-label="Ajouter un article" class="back-btn" onclick="App.openAddModal()">+</button>
+</header>
+<div id="list-content"></div>
+</div>
+<!-- ══════════════════════════════════════════
+       PAGE 3 — STOCK
+       ══════════════════════════════════════════ -->
+<div aria-label="Mon stock" class="page" id="page-stock" role="region">
+<header class="page-header">
+<h1>📦 Mon stock</h1>
+<button aria-label="Ajouter au stock" class="back-btn" onclick="App.openAddStockModal()">+</button>
+</header>
+<div id="stock-content"></div>
+</div>
+<!-- ══════════════════════════════════════════
+       PAGE 4 — BUDGET
+       ══════════════════════════════════════════ -->
+<div aria-label="Configuration du budget" class="page" id="page-budget" role="region">
+<header class="page-header">
+<h1>💰 Mon budget</h1>
+</header>
+<div id="budget-content"></div>
+</div>
+<!-- ══════════════════════════════════════════
+       PAGE 5 — PROFIL
+       ══════════════════════════════════════════ -->
+<div aria-label="Profil et paramètres" class="page" id="page-profile" role="region">
+<header class="page-header">
+<h1>👤 Profil &amp; Paramètres</h1>
+</header>
+<div id="profile-content"></div>
+</div>
+<!-- ══════════════════════════════════════════
+       PAGE 6 — MODE COURSES
+       ══════════════════════════════════════════ -->
+<div aria-label="Mode courses en magasin" class="page" id="page-shopping" role="region">
+<header class="page-header">
+<button aria-label="Retour" class="back-btn" onclick="App.navigate('home')">←</button>
+<h1>🏪 Mode courses</h1>
+</header>
+<div id="shopping-content"></div>
+</div>
+<!-- ══════════════════════════════════════════
+       PAGE 7 — CALCULATEUR BOUCHER
+       ══════════════════════════════════════════ -->
+<div aria-label="Calculateur poids et prix" class="page" id="page-butcher" role="region">
+<header class="page-header">
+<button aria-label="Retour" class="back-btn" onclick="App.navigate('home')">←</button>
+<h1>⚖️ Calculateur poids</h1>
+</header>
+<div id="butcher-content"></div>
+</div>
+<!-- ══════════════════════════════════════════
+       PAGE 8 — COMPARATEUR DE PRIX
+       ══════════════════════════════════════════ -->
+<div aria-label="Comparateur de prix" class="page" id="page-compare" role="region">
+<header class="page-header">
+<button aria-label="Retour" class="back-btn" onclick="App.navigate('profile')">←</button>
+<h1>🔍 Comparateur de prix</h1>
+</header>
+<div id="compare-content"></div>
+</div>
+<!-- ══════════════════════════════════════════
+       PAGE 9 — RECETTES
+       ══════════════════════════════════════════ -->
+<div aria-label="Recettes économiques" class="page" id="page-recipes" role="region">
+<header class="page-header">
+<button aria-label="Retour" class="back-btn" onclick="App.navigate('home')">←</button>
+<h1>👨‍🍳 Recettes économiques</h1>
+</header>
+<div id="recipes-content"></div>
+</div>
+<!-- ══════════════════════════════════════════
+       PAGE 10 — ASSISTANT
+       ══════════════════════════════════════════ -->
+<div aria-label="Assistant intelligent" class="page" id="page-assistant" role="region">
+<header class="page-header">
+<button aria-label="Retour" class="back-btn" onclick="App.navigate('home')">←</button>
+<h1>🤖 Assistant</h1>
+</header>
+<div id="assistant-content" style="height:calc(100vh - 128px)"></div>
+</div>
+<!-- ══════════════════════════════════════════
+       PAGE 11 — HISTORIQUE
+       ══════════════════════════════════════════ -->
+<div aria-label="Historique des courses" class="page" id="page-history" role="region">
+<header class="page-header">
+<button aria-label="Retour" class="back-btn" onclick="App.navigate('profile')">←</button>
+<h1>📋 Historique</h1>
+</header>
+<div id="history-content"></div>
+</div>
+<!-- ══════════════════════════════════════════
+       NAVIGATION INFÉRIEURE
+       ══════════════════════════════════════════ -->
+<nav aria-label="Navigation principale" class="bottom-nav" role="navigation">
+<button aria-label="Accueil" class="nav-item active" data-page="home">
+<span class="nav-icon">🏠</span>
+<span>Accueil</span>
+</button>
+<button aria-label="Liste de courses" class="nav-item" data-page="list">
+<span class="nav-icon">📝</span>
+<span>Liste</span>
+</button>
+<div class="nav-center">
+<button aria-label="Ajouter un article rapidement" class="nav-add-btn">+</button>
+</div>
+<button aria-label="Mon stock" class="nav-item" data-page="stock">
+<span class="nav-icon">📦</span>
+<span>Stock</span>
+</button>
+<button aria-label="Budget" class="nav-item" data-page="budget">
+<span class="nav-icon">💰</span>
+<span>Budget</span>
+</button>
+<button aria-label="Profil" class="nav-item" data-page="profile">
+<span class="nav-icon">👤</span>
+<span>Profil</span>
+</button>
+</nav>
+<!-- ══════════════════════════════════════════
+       TOASTS (NOTIFICATIONS)
+       ══════════════════════════════════════════ -->
+<div aria-atomic="true" aria-live="polite" class="toast-container" id="toast-container"></div>
+<!-- ══════════════════════════════════════════
+       MODAL — AJOUTER UN ARTICLE À LA LISTE
+       ══════════════════════════════════════════ -->
+<div aria-label="Ajouter un article" aria-modal="true" class="modal-overlay" id="modal-add-item" role="dialog">
+<div class="modal">
+<div class="modal-handle"></div>
+<h2 class="modal-title">➕ Ajouter un article</h2>
+<form id="add-item-form" onsubmit="event.preventDefault(); App.submitAddItem()">
+<div class="form-group">
+<label class="form-label" for="add-item-name">Nom du produit <span class="required">*</span></label>
+<input autocomplete="off" class="form-input" id="add-item-name" placeholder="Ex: Yaourt nature" required="" type="text"/>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div class="form-group">
+<label class="form-label" for="add-item-qty">Quantité</label>
+<input class="form-input" id="add-item-qty" min="0" step="0.1" type="number" value="1"/>
+</div>
+<div class="form-group">
+<label class="form-label" for="add-item-unit">Unité</label>
+<select class="form-select" id="add-item-unit">
+<option value="pcs">pièce(s)</option>
+<option value="g">grammes</option>
+<option value="kg">kilogrammes</option>
+<option value="mL">millilitres</option>
+<option value="L">litres</option>
+<option value="boîte">boîte(s)</option>
+<option value="paquet">paquet(s)</option>
+<option value="bouteille">bouteille(s)</option>
+</select>
+</div>
+</div>
+<div class="form-group">
+<label class="form-label" for="add-item-price">Prix estimé (€)</label>
+<div class="input-group">
+<input class="form-input" id="add-item-price" min="0" placeholder="0,00" step="0.01" type="number"/>
+<span class="input-addon">€</span>
+</div>
+<div class="form-hint">⚠️ Prix indicatif — modifiable lors des courses.</div>
+</div>
+<div class="form-group">
+<label class="form-label" for="add-item-priority">Priorité</label>
+<select class="form-select" id="add-item-priority">
+<option value="1">🔴 Indispensable</option>
+<option selected="" value="2">🟠 Utile</option>
+<option value="3">⚪ Facultatif</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label" for="add-item-aisle">Rayon / Magasin</label>
+<input class="form-input" id="add-item-aisle" placeholder="Ex: Fruits &amp; Légumes, Boucherie…" type="text"/>
+</div>
+<div style="display:flex;gap:10px;margin-top:8px">
+<button class="btn btn-secondary btn-full" onclick="App.closeModal('modal-add-item')" type="button">Annuler</button>
+<button class="btn btn-primary btn-full" type="submit">✅ Ajouter</button>
+</div>
+</form>
+</div>
+</div>
+<!-- ══════════════════════════════════════════
+       MODAL — AJOUTER AU STOCK
+       ══════════════════════════════════════════ -->
+<div aria-label="Ajouter au stock" aria-modal="true" class="modal-overlay" id="modal-add-stock" role="dialog">
+<div class="modal">
+<div class="modal-handle"></div>
+<h2 class="modal-title">📦 Ajouter au stock</h2>
+<form onsubmit="event.preventDefault(); App.submitAddStock()">
+<div class="form-group">
+<label class="form-label" for="as-name">Nom du produit <span class="required">*</span></label>
+<input class="form-input" id="as-name" placeholder="Ex: Farine T55" required="" type="text"/>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div class="form-group">
+<label class="form-label" for="as-qty">Quantité</label>
+<input class="form-input" id="as-qty" min="0" step="0.1" type="number" value="1"/>
+</div>
+<div class="form-group">
+<label class="form-label" for="as-unit">Unité</label>
+<select class="form-select" id="as-unit">
+<option value="pcs">pièce(s)</option>
+<option value="g">grammes</option>
+<option value="kg">kilogrammes</option>
+<option value="mL">millilitres</option>
+<option value="L">litres</option>
+<option value="boîte">boîte(s)</option>
+<option value="paquet">paquet(s)</option>
+<option value="bouteille">bouteille(s)</option>
+</select>
+</div>
+</div>
+<div class="form-group">
+<label class="form-label" for="as-location">Emplacement</label>
+<select class="form-select" id="as-location">
+<option value="frigo">❄️ Réfrigérateur</option>
+<option value="congelateur">🧊 Congélateur</option>
+<option selected="" value="placard">🗄️ Placard</option>
+<option value="cave">🍷 Cave</option>
+<option value="sdb">🚿 Salle de bain</option>
+<option value="buanderie">🧺 Buanderie</option>
+<option value="autre">📦 Autre</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label" for="as-expiry">Date limite de consommation</label>
+<input class="form-input" id="as-expiry" type="date"/>
+</div>
+<div class="form-group">
+<label class="form-label" for="as-price">Prix payé (€)</label>
+<div class="input-group">
+<input class="form-input" id="as-price" min="0" placeholder="0,00" step="0.01" type="number"/>
+<span class="input-addon">€</span>
+</div>
+</div>
+<div style="display:flex;gap:10px;margin-top:8px">
+<button class="btn btn-secondary btn-full" onclick="App.closeModal('modal-add-stock')" type="button">Annuler</button>
+<button class="btn btn-primary btn-full" type="submit">✅ Ajouter au stock</button>
+</div>
+</form>
+</div>
+</div>
+<!-- ══════════════════════════════════════════
+       MODAL — AFFICHAGE EN GRAND (BOUCHER)
+       ══════════════════════════════════════════ -->
+<div aria-label="Affichage en grand" aria-modal="true" class="modal-overlay" id="modal-big" role="dialog">
+<div class="modal" style="text-align:center">
+<div class="modal-handle"></div>
+<h2 class="modal-title" style="text-align:center">📺 À montrer au commerçant</h2>
+<div class="calc-phrase big" id="big-phrase-text" style="font-size:1.8rem;padding:32px 16px;line-height:1.4">
+        —
+      </div>
+<p style="font-size:0.8rem;color:var(--text-muted);margin:8px 0 16px">
+        ⚠️ Prix estimé — peut varier selon le poids exact.
+      </p>
+<button class="btn btn-secondary btn-full" onclick="App.closeModal('modal-big')">Fermer</button>
+</div>
+</div>
+<!-- ══════════════════════════════════════════
+       MODAL — DÉTAIL RECETTE
+       ══════════════════════════════════════════ -->
+<div aria-label="Détail de la recette" aria-modal="true" class="modal-overlay" id="modal-recipe" role="dialog">
+<div class="modal">
+<div class="modal-handle"></div>
+<div id="recipe-detail-content"></div>
+<button class="btn btn-secondary btn-full" onclick="App.closeModal('modal-recipe')" style="margin-top:8px">Fermer</button>
+</div>
+</div>
+<!-- ══════════════════════════════════════════
+       MODAL — ALERTE DÉPASSEMENT BUDGET
+       ══════════════════════════════════════════ -->
+<div aria-label="Alerte budget" aria-modal="true" class="modal-overlay" id="modal-budget-alert" role="dialog">
+<div class="modal" style="text-align:center">
+<div class="modal-handle"></div>
+<div style="font-size:3rem;margin-bottom:12px">🚨</div>
+<h2 class="modal-title" style="color:var(--red)">Budget dépassé !</h2>
+<p id="budget-alert-msg" style="font-size:0.95rem;color:var(--text-light);margin-bottom:20px">
+        Cet achat dépasse votre budget disponible.
+      </p>
+<div style="display:flex;flex-direction:column;gap:8px">
+<button class="btn btn-orange btn-full" onclick="App.optimizeList();App.closeModal('modal-budget-alert')">
+          💡 Retirer des articles facultatifs
+        </button>
+<button class="btn btn-secondary btn-full" onclick="App.closeModal('modal-budget-alert')">
+          Continuer quand même
+        </button>
+</div>
+</div>
+</div>
+</div><!-- /.app-container -->
+<!-- Scripts -->
+<script src="data.js"></script>
+<script src="app.js"></script>
+<!-- Styles supplémentaires inline pour les cas spéciaux -->
+<style>
+  /* Assure que les steppers sont bien centrés */
+  .stepper { display: inline-flex; }
+
+  /* Fix iOS input zoom */
+  @media (max-width: 480px) {
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    input[type="search"],
+    input[type="date"],
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+  }
+
+  /* Animation de la barre de budget */
+  @keyframes pulse-red {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(192,57,43,0.4); }
+    50%       { box-shadow: 0 0 0 8px rgba(192,57,43,0); }
+  }
+  .budget-ticker.danger { animation: pulse-red 1.5s infinite; }
+
+  /* Smooth scroll dans le chat */
+  #chat-messages { scroll-behavior: smooth; }
+
+  /* Amélioration focus visible pour accessibilité */
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible {
+    outline: 3px solid #4a7c59;
+    outline-offset: 2px;
+  }
+
+  /* Empêche le double-tap zoom sur iOS */
+  button { touch-action: manipulation; }
+
+  /* Scrollbar discrète */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+  /* Impression */
+  @media print {
+    .bottom-nav, .modal-overlay, #toast-container { display: none !important; }
+    .page { display: block !important; padding: 0; }
+    .page-header { position: static; }
+  }
+</style>
+</body>
+</html>
